@@ -44,7 +44,7 @@ public class InputHandler {
         if (Objects.equals(expressionType, romeType)) {
             return convertArabNumberToRome(result);
         }
-        return Integer.toString((int) result);
+        return Float.toString(result);
     }
 
 
@@ -76,15 +76,16 @@ public class InputHandler {
     }
 
     private float calculate() {
+        Calculator calc = new Calculator();
         switch (action) {
             case ("-"):
-                return Calculator.sub(x, y);
+                return calc.sub(x, y);
             case ("/"):
-                return Calculator.div(x, y);
+                return calc.div(x, y);
             case ("*"):
-                return Calculator.mult(x, y);
+                return calc.mult(x, y);
             default:
-                return Calculator.sum(x, y);
+                return calc.sum(x, y);
         }
     }
 

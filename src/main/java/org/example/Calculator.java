@@ -1,19 +1,21 @@
 package org.example;
 
-public class Calculator {
-    public static float sum(int x, int y) {
+public class Calculator implements CalculatorInterface {
+
+    public int sum(int x, int y) {
         return x + y;
     }
 
-    public static float sub(int x, int y) {
+    public int sub(int x, int y) {
         return x - y;
     }
 
-    public static float mult(int x, int y) {
+    public int mult(int x, int y) {
         return x * y;
     }
 
-    public static float div(int x, int y) {
+    public float div(int x, int y) {
         return (float) x / y;
     }
+
 }
