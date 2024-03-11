@@ -14,6 +14,7 @@ public class InputHandler implements InputHandlerInterface {
     private final String isNegativeNumberRegularExpression = "^[\\-]([I|X|V|C|L|D|M]+|[\\d]+)$";
     private final String isRomeRegularExpression = "^[\\-]?[I|X|V|C|L|D|M|i|x|v|c|l|d|m]+\\s[\\+\\-\\/\\*]\\s[\\-]?[I|X|V|C|L|D|M|i|x|v|c|l|d|m]+$";
     private final String isArabicRegularExpression = "^[\\-]?[\\d]+\\s[\\+\\-\\/\\*]\\s[\\-]?[\\d]+$";
+    private final String smallRomeNumbers = "[i|x|v|c|l|d|m]";
     private final List<String> OPERATORS = List.of("+", "-", "/", "*");
     private final Map<String, Integer> ROME_NUMBERS = Map.of(
             "I", 1,
@@ -33,12 +34,14 @@ public class InputHandler implements InputHandlerInterface {
     private String action;
     private String expressionType;
 
-    InputHandler() {}
+    InputHandler() {
+    }
 
     public String getResult(String expression) throws Exception {
         checkExpressionString(expression);
         action = getFilteredArrayFromInput(expression).get(1);
         setNumbers(expression);
+        checkNumbersRange();
         float resultNumber = calculate();
         if (Objects.equals(expressionType, ROME_TYPE)) {
             checkRomeTypeResultOnZeroAndNegativeNumbers(resultNumber);
@@ -106,10 +109,6 @@ public class InputHandler implements InputHandlerInterface {
 
     private void setNumbers(String mathExpression) throws Exception {
         List<String> expressionArray = getFilteredArrayFromInput(mathExpression);
-        String smallRomeNumbers = "[i|x|v|c|l|d|m]";
-        if (Objects.equals(expressionType, ROME_TYPE) && (expressionArray.get(0).matches(smallRomeNumbers) || expressionArray.get(2).matches(smallRomeNumbers)))
-            throw new Exception("В римской системе буквы должны быть заглавными");
-
         if (Objects.equals(expressionType, ROME_TYPE)) {
             checkRomeNumbers(expressionArray.get(0), expressionArray.get(2));
             x = convertRomeToArabNumber(expressionArray.get(0));
@@ -118,16 +117,27 @@ public class InputHandler implements InputHandlerInterface {
             x = Integer.parseInt(expressionArray.get(0));
             y = Integer.parseInt(expressionArray.get(2));
         }
+    }
+
+    /**
+     * @param number1 - первое число; String
+     * @param number2 - второе число; String
+     * @throws Exception :
+     *                   1) Если подряд идёт > 4 I (в любом из входящих чисел), то вернется исключение "Некоректно введено число : " + number1
+     *                   2) Если любое и чисел написано в нижнем регистре, то вернется исключение "В римской системе буквы должны быть заглавными"
+     */
+    private void checkRomeNumbers(String number1, String number2) throws Exception {
+        if (number1.matches(smallRomeNumbers) || number2.matches(smallRomeNumbers)) {
+            throw new Exception("В римской системе буквы должны быть заглавными");
+        }
+        if (number1.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number1);
+        if (number2.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number2);
+    }
+
+    private void checkNumbersRange() throws Exception {
         if ((x < 0 || x > 10) || (y < 0 || y > 10))
             throw new Exception("Числа должны быть в промежутке от 0 до 10");
         if (x == 0 && y == 0 && Objects.equals(action, "/")) throw new Exception("Нельзя делить на 0");
-    }
-
-    private void checkRomeNumbers(String number1, String number2) throws Exception {
-        // Если у нас подряд идёт > 4 I (любое число), то уже некоректно введено
-        // Непонятно как поступать с, к примеру, IVI = 5 - по сути введено правильно, но число 5 имеет своё обозначение V
-        if (number1.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number1);
-        if (number2.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number2);
     }
 
     private Integer convertRomeToArabNumber(String romeNumber) throws Exception {
@@ -152,27 +162,24 @@ public class InputHandler implements InputHandlerInterface {
     }
 
     private String convertArabNumberToRome(float number) {
-        return "I".repeat((int) number).replace("IIIII", "V").replace("IIII", "IV").replace("VV", "X").replace("VIV", "IX").replace("XXXXX", "L").replace("XXXX", "XL").replace("LL", "C").replace("LXL", "XC").replace("CCCCC", "D").replace("CCCC", "CD").replace("DD", "M").replace("DCD", "CM");
+        return "I".repeat((int) number)
+                .replace("IIIII", "V")
+                .replace("IIII", "IV")
+                .replace("VV", "X")
+                .replace("VIV", "IX")
+                .replace("XXXXX", "L")
+                .replace("XXXX", "XL")
+                .replace("LL", "C")
+                .replace("LXL", "XC")
+                .replace("CCCCC", "D")
+                .replace("CCCC", "CD")
+                .replace("DD", "M")
+                .replace("DCD", "CM");
     }
 
 
     private List<String> getFilteredArrayFromInput(String str) {
         return List.of(Arrays.stream(str.split(" ")).filter((x) -> !x.isEmpty()).toArray(String[]::new));
-    }
-
-    private static Map<String, Integer> createRomeNumbersMap() {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("I", 1);
-        map.put("II", 2);
-        map.put("III", 3);
-        map.put("IV", 4);
-        map.put("V", 5);
-        map.put("VI", 6);
-        map.put("VII", 7);
-        map.put("IIX", 8);
-        map.put("IX", 9);
-        map.put("X", 10);
-        return map;
     }
 
 }
