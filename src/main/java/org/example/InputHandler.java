@@ -45,8 +45,14 @@ public class InputHandler implements InputHandlerInterface {
         float resultNumber = calculate();
         if (Objects.equals(expressionType, ROME_TYPE)) {
             checkRomeTypeResultOnZeroAndNegativeNumbers(resultNumber);
+            return convertArabNumberToRome(resultNumber);
         }
-        return convertResultArabToRome(resultNumber);
+        else{
+            if(!Objects.equals(action,"/")){
+                return Integer.toString((int)resultNumber);
+            }
+            return Float.toString(resultNumber);
+        }
     }
 
     private void checkRomeTypeResultOnZeroAndNegativeNumbers(float result) throws Exception {
@@ -57,15 +63,6 @@ public class InputHandler implements InputHandlerInterface {
             throw new Exception(NEGATIVE_NUMBER_IN_ROME);
         }
     }
-
-
-    private String convertResultArabToRome(float result) {
-        if (Objects.equals(expressionType, ROME_TYPE)) {
-            return convertArabNumberToRome(result);
-        }
-        return Float.toString(result);
-    }
-
 
     private void checkExpressionString(String mathExpression) throws Exception {
         List<String> expressionArray = getFilteredArrayFromInput(mathExpression);
@@ -162,6 +159,9 @@ public class InputHandler implements InputHandlerInterface {
     }
 
     private String convertArabNumberToRome(float number) {
+        if(number % 10 != 0){
+            number = (float) Math.floor(number);
+        }
         return "I".repeat((int) number)
                 .replace("IIIII", "V")
                 .replace("IIII", "IV")
