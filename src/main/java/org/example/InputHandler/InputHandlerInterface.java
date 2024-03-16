@@ -1,4 +1,4 @@
-package org.example;
+package org.example.InputHandler;
 
 public interface InputHandlerInterface {
 }

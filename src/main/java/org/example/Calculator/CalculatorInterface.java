@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Calculator;
 
 public interface CalculatorInterface {
     int sum(int x, int y);
