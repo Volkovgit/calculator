@@ -4,11 +4,12 @@ package org.example.Numbers;
 import java.util.Map;
 import java.util.List;
 
-public class RomeNumbers {
+public class RomeNumbers implements DifferentNumberInterface{
 
     private final String NOT_ZERO_IN_ROME = "В римской системе счисления нет 0";
     private final String NEGATIVE_NUMBER_IN_ROME = "В римской системе счисления нет отрицательных чисел";
     private final String smallRomeNumbers = "[i|x|v|c|l|d|m]";
+    private final String isNegativeRomeNumberRegularExpression = "^[\\-]([I|X|V|C|L|D|M]+)$";
     private final Map<String, Integer> ROME_NUMBERS = Map.of(
             "I", 1,
             "II", 2,
@@ -24,17 +25,17 @@ public class RomeNumbers {
     private int firstNumber;
     private int secondNumber;
 
-    public RomeNumbers(String firstNumberString,String secondNumberString) throws Exception {
-        checkRomeNumbers(firstNumberString,secondNumberString);
+    public RomeNumbers(String firstNumberString, String secondNumberString) throws Exception {
+        checkRomeNumbers(firstNumberString, secondNumberString);
         firstNumber = convertRomeToArabNumber(firstNumberString);
         secondNumber = convertRomeToArabNumber(secondNumberString);
     }
 
-    public List<Integer> getNumbers(){
-        return List.of(firstNumber,secondNumber);
+    public List<Integer> getNumbers() {
+        return List.of(firstNumber, secondNumber);
     }
 
-    private void checkRomeTypeResultOnZeroAndNegativeNumbers(float result) throws Exception {
+    public void checkResult(float result) throws Exception {
         if (result == 0) {
             throw new Exception(NOT_ZERO_IN_ROME);
         }
@@ -51,15 +52,21 @@ public class RomeNumbers {
      *                   2) Если любое и чисел написано в нижнем регистре, то вернется исключение "В римской системе буквы должны быть заглавными"
      */
     private void checkRomeNumbers(String number1, String number2) throws Exception {
-
+        if (number1.matches(isNegativeRomeNumberRegularExpression) || number2.matches(isNegativeRomeNumberRegularExpression)) {
+            throw new Exception("В римской системе счисления нет отрицательных чисел");
+        }
         if (number1.matches(smallRomeNumbers) || number2.matches(smallRomeNumbers)) {
             throw new Exception("В римской системе буквы должны быть заглавными");
         }
-        if (number1.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number1);
-        if (number2.matches("^IIII$")) throw new Exception("Некоректно введено число : " + number2);
+        if (number1.matches("^IIII$")) {
+            throw new Exception("Некоректно введено число : " + number1);
+        }
+        if (number2.matches("^IIII$")) {
+            throw new Exception("Некоректно введено число : " + number2);
+        }
     }
 
-    public String convertArabNumberToRome(float number) {
+    public String convertResult(float number,String action) {
         if (number % 10 != 0) {
             number = (float) Math.floor(number);
         }
