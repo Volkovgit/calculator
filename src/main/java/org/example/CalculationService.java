@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.InputHandler.InputHandler;
+import org.example.InputHandler.InputHandlerImpl;
 
 public class CalculationService {
     CalculationService() {}
@@ -9,7 +9,7 @@ public class CalculationService {
         IOController controller = new IOController();
         controller.printLine("Введи выражение");
         String strInput = controller.readLine();
-        InputHandler mathExpr = new InputHandler();
+        InputHandlerImpl mathExpr = new InputHandlerImpl();
         controller.printLine(mathExpr.getResult(strInput));
     }
 }

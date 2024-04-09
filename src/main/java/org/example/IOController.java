@@ -1,14 +1,14 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class IOController {
 
-    public String readLine() {
-        Scanner scanner = new Scanner(System.in);
-        String inputLine = scanner.nextLine();
-        scanner.close();
-        return inputLine;
+    public String readLine() throws IOException{
+        try(Scanner scanner = new Scanner(System.in)){
+            return scanner.nextLine();
+        }
     }
 
     public void printLine(String str) {

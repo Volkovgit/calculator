@@ -4,7 +4,7 @@ package org.example.Numbers;
 import java.util.Map;
 import java.util.List;
 
-public class RomeNumbers implements DifferentNumberInterface{
+public class RomeNumbers implements DifferentNumber {
 
     private final String NOT_ZERO_IN_ROME = "В римской системе счисления нет 0";
     private final String NEGATIVE_NUMBER_IN_ROME = "В римской системе счисления нет отрицательных чисел";
@@ -91,17 +91,17 @@ public class RomeNumbers implements DifferentNumberInterface{
         int summ = 0;
         for (int i = romeNumberLength; i >= 0; i--) {
             int currentNumber = ROME_NUMBERS.get(charRomeNumber[i] + "");
-            if (i - 1 >= 0) {
-                int prevNumber = ROME_NUMBERS.get(charRomeNumber[i - 1] + "");
-                if (currentNumber > prevNumber) {
-                    summ += ROME_NUMBERS.get(charRomeNumber[i - 1] + "" + charRomeNumber[i]);
-                    i--;
-                } else {
-                    summ += currentNumber;
-                }
-            } else {
+            if(i-1<0){
                 summ += currentNumber;
+                continue;
             }
+            int prevNumber = ROME_NUMBERS.get(charRomeNumber[i - 1] + "");
+            if(currentNumber < prevNumber){
+                summ += currentNumber;
+                continue;
+            }
+            summ += ROME_NUMBERS.get(charRomeNumber[i - 1] + "" + charRomeNumber[i]);
+            i--;
         }
         return summ;
     }

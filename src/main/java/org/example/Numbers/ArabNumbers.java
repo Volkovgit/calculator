@@ -3,7 +3,7 @@ package org.example.Numbers;
 import java.util.List;
 import java.util.Objects;
 
-public class ArabNumbers implements DifferentNumberInterface{
+public class ArabNumbers implements DifferentNumber {
 
     private final String NEGATIVE_NUMBER = "Ошибка : отрицательные числа запрещены";
     private final String isNegativeNumberRegularExpression = "^[\\-]([\\d]+)$";
